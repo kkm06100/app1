@@ -15,6 +15,17 @@ services:
       KAFKA_LOG_DIRS: "/var/lib/kafka/data"
     volumes:
       - kafka-data:/var/lib/kafka/data
-
+  postgres:
+    image: postgres:13.22
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypass
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    networks:
+      - appnet
 volumes:
   kafka-data:
+networks:
+  appnet: {}
