@@ -1,7 +1,9 @@
+version: "3.9"
+
 services:
   kafka:
     image: apache/kafka:3.9.1
-    container_name: kafka
+    container_name: kafka-docker
     ports:
       - "9092:9092"
       - "9093:9093"
@@ -9,23 +11,34 @@ services:
       KAFKA_KRAFT_MODE: "true"
       KAFKA_BROKER_ID: 1
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-docker:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka-docker:9093"
       KAFKA_PROCESS_ROLES: "broker,controller"
       KAFKA_LOG_DIRS: "/var/lib/kafka/data"
     volumes:
       - kafka-data:/var/lib/kafka/data
+    networks:
+      appnet:
+        aliases:
+          - kafka-docker
+
   postgres:
     image: postgres:13.22
+    container_name: postgres-docker
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypass
       POSTGRES_DB: mydb
     ports:
-      - "5432:5432"
+      - "15432:5432"
     networks:
-      - appnet
+      appnet:
+        aliases:
+          - postgres-docker
+
 volumes:
   kafka-data:
+
 networks:
-  appnet: {}
+  appnet:
+    driver: bridge

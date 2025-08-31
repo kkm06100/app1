@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:15432/mydb
+    username: myuser
+    password: mypass
+
+  kafka:
+    bootstrap-servers: localhost:9092
